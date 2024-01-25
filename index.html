@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/2a8b097da4.js" crossorigin="anonymous" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yonazon Books</title>
+</head>
+<body>
+    <div class="container">
+        <h1>My Library</h1>
+        <button class="showAddForm">Add a Book</button>
+        <form id="addBook" class="addBook">
+            <label for="title">Title</label>
+            <input id='title' type="text" required />
+            <label for="author">Author</label>
+            <input id='author' type="text" required />
+            <label for="pages"># Pages</label>
+            <input id="pages" type="number" required />
+            <input type='submit' class="addBookButton" value="Add"></input>
+        </form>
+        <div class="booksContainer">
+
+        </div>
+    </div>
+</body>
+<script src="main.js" defer></script>
+</html>
