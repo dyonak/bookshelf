@@ -1,4 +1,150 @@
-const myLibrary = []
+class Library {
+    constructor() {
+        this.books = []
+    }
+
+    getBooks() {
+        return this.books
+    }
+
+    removeBookById(id) {
+        if (this.books[id]) {
+            this.books.splice(id, 1)
+            return true
+        }
+        return false
+    }
+    
+    //
+    addBookToLibrary(book) {
+        this.books.push(book)
+        book.library = this
+    }
+}
+
+class Book {
+    constructor(title, author, pages = 0) {
+        this.title = title
+        this.author = author
+        this.pages = pages
+        this.library = null
+        this.read = false
+    }
+
+    get title() {
+        return this._title;
+    }
+
+    set title(title) {
+        this._title = title
+    }
+
+    get author() {
+        return this._author;
+    }
+
+    set author(author) {
+        this._author = author
+    }
+
+    get pages() {
+        return this._pages;
+    }
+
+    set pages(pages) {
+        this._pages = pages
+    }
+}
+
+
+
+class Renderer {
+    constructor(library) {
+        this.showAddFormBtn = document.querySelector('.showAddForm')
+        this.showAddFormBtn.addEventListener('click', e => this.toggleForm())
+
+        this.bookContainer = document.querySelector('.booksContainer')
+        this.addBookForm = document.querySelector('.addBook')
+        this.addBookButton = document.querySelector('.addBookButton')
+        this.library = library
+    }
+
+    updatePage() {
+        let books = this.library.getBooks()
+        this.bookContainer.innerHTML = ''
+        console.log(books)
+        books.forEach((book, id) => {
+            this.addBook(book, id)
+        })
+        this.addBookForm.style.display = 'none'
+    }
+     
+    addBook(book, id) {
+        
+        let bookDiv = document.createElement('div')
+        bookDiv.style.backgroundColor = '#fff'
+
+        bookDiv.classList.add('book')
+        bookDiv.dataset.indexNumber = id
+
+        let bookTitleDiv = document.createElement('div')
+        bookTitleDiv.classList.add('bookTitle')
+        bookTitleDiv.textContent = book.title
+        bookDiv.appendChild(bookTitleDiv)
+
+        let bookAuthorDiv = document.createElement('div')
+        bookAuthorDiv.classList.add('bookAuthor')
+        bookAuthorDiv.textContent = book.author
+        bookDiv.appendChild(bookAuthorDiv)
+
+        let bookPagesDiv = document.createElement('div')
+        bookPagesDiv.classList.add('bookPages')
+        bookPagesDiv.textContent = book.pages
+        bookDiv.appendChild(bookPagesDiv)
+
+        let bookReadDiv = document.createElement('div')
+        bookReadDiv.classList.add('bookRead')
+        bookReadDiv.classList.add('bookActions')
+        bookReadDiv.textContent = book.isRead === true ? 'Mark Unread' : 'Mark Read'
+        bookDiv.appendChild(bookReadDiv)
+
+        bookReadDiv.addEventListener('click', (e) => {
+            let id = e.target.parentNode.dataset.indexNumber;
+            book.read = book.read === true ? false : true
+            e.target.textContent = book.read === true ? 'Mark Unread' : 'Mark Read'
+            // e.target.parentNode.style.backgroundColor = myLibrary[id].isRead === false ? '#fff' : '#ccc'
+            e.target.parentNode.style.opacity = book.read === false ? '100%' : '60%'
+        });
+
+        let bookDelDiv = document.createElement('div')
+        bookDelDiv.classList.add('bookDel')
+        bookDelDiv.classList.add('bookActions')
+        bookDelDiv.textContent = 'Remove'
+        bookDiv.appendChild(bookDelDiv)
+
+        bookDelDiv.addEventListener('click', (e) => {
+            //Removes without confirmation, add in later
+            this.library.removeBookById(id)
+            e.target.parentNode.remove()
+            console.log(this.library.getBooks())
+        }, this.library);
+        
+        this.bookContainer.appendChild(bookDiv)
+    }
+
+    toggleForm() {
+        console.log('test' + this.addBookForm.style.display)
+        this.addBookForm.style.display = this.addBookForm.style.display === 'none' ? 'grid' : 'none'
+    }
+}
+const myClassLibrary = new Library();
+myClassLibrary.addBookToLibrary(new Book('1984', 'George Orwell', 531))
+myClassLibrary.addBookToLibrary(new Book('Farenheit 451', 'Ray Bradbury', 362))
+const pageRenderer = new Renderer(myClassLibrary);
+
+pageRenderer.updatePage()
+
+/* const myLibrary = []
 const bookContainer = document.querySelector('.booksContainer')
 const addBookForm = document.querySelector('.addBook')
 addBookForm.style.display = 'none'
@@ -106,4 +252,4 @@ const book3 = new Book('1984', 'George Orwell', 631)
 
 book1.addBookToLibrary();
 book2.addBookToLibrary();
-book3.addBookToLibrary();
+book3.addBookToLibrary(); */
