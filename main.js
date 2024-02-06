@@ -67,9 +67,16 @@ class Renderer {
         this.addBookForm = document.querySelector('.addBook')
         this.addBookButton = document.querySelector('.addBookButton')
         this.library = library
+
+        this.addBookButton.addEventListener('click', (e) => {
+            e.preventDefault()
+            this.processAddBookForm(e)
+        })
+
     }
 
     updatePage() {
+        this.clearBooks()
         let books = this.library.getBooks()
         this.bookContainer.innerHTML = ''
         console.log(books)
@@ -87,9 +94,13 @@ class Renderer {
         bookDiv.classList.add('book')
         bookDiv.dataset.indexNumber = id
 
+        //Use this buildDev method to put together a new div for different bits of info to attach to the bookDiv
         this.buildDiv(book.title, ['bookTitle'], bookDiv)
         this.buildDiv(book.author, ['bookAuthor'], bookDiv)
         this.buildDiv(book.pages, 'bookPages', bookDiv)
+
+        //For the next two we need to add event listeners so we're taking advantage of the return newDiv 
+        //from the buildDiv function to access them
         let readDiv = this.buildDiv(
             book.isRead === true ? 'Mark Unread' : 'Mark Read',
             ['bookRead', 'bookActions'],
@@ -130,16 +141,26 @@ class Renderer {
         })
 
         newDiv.textContent = divText
-        this.appendDiv(newDiv, parentDiv)
+        parentDiv.appendChild(newDiv)
         return newDiv
     }
 
-    appendDiv(divName, parentDivName) {
-        parentDivName.appendChild(divName)
+    processAddBookForm(e) {
+        let title = document.querySelector('#title').value
+        let author = document.querySelector('#author').value
+        let pages = document.querySelector('#pages').value
+
+        let newBook = new Book(title, author, pages)
+
+        this.library.addBookToLibrary(newBook)
+        this.updatePage()
+    }
+
+    clearBooks() {
+        this.bookContainer.innerHTML = ''
     }
 
     toggleForm() {
-        console.log('test' + this.addBookForm.style.display)
         this.addBookForm.style.display = this.addBookForm.style.display === 'none' ? 'grid' : 'none'
     }
 }
