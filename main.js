@@ -87,28 +87,17 @@ class Renderer {
         bookDiv.classList.add('book')
         bookDiv.dataset.indexNumber = id
 
-        let bookTitleDiv = document.createElement('div')
-        bookTitleDiv.classList.add('bookTitle')
-        bookTitleDiv.textContent = book.title
-        bookDiv.appendChild(bookTitleDiv)
+        this.buildDiv(book.title, ['bookTitle'], bookDiv)
+        this.buildDiv(book.author, ['bookAuthor'], bookDiv)
+        this.buildDiv(book.pages, 'bookPages', bookDiv)
+        let readDiv = this.buildDiv(
+            book.isRead === true ? 'Mark Unread' : 'Mark Read',
+            ['bookRead', 'bookActions'],
+            bookDiv
+        )
+        let delDiv = this.buildDiv('Remove', ['bookDel', 'bookActions'], bookDiv)
 
-        let bookAuthorDiv = document.createElement('div')
-        bookAuthorDiv.classList.add('bookAuthor')
-        bookAuthorDiv.textContent = book.author
-        bookDiv.appendChild(bookAuthorDiv)
-
-        let bookPagesDiv = document.createElement('div')
-        bookPagesDiv.classList.add('bookPages')
-        bookPagesDiv.textContent = book.pages
-        bookDiv.appendChild(bookPagesDiv)
-
-        let bookReadDiv = document.createElement('div')
-        bookReadDiv.classList.add('bookRead')
-        bookReadDiv.classList.add('bookActions')
-        bookReadDiv.textContent = book.isRead === true ? 'Mark Unread' : 'Mark Read'
-        bookDiv.appendChild(bookReadDiv)
-
-        bookReadDiv.addEventListener('click', (e) => {
+        readDiv.addEventListener('click', (e) => {
             let id = e.target.parentNode.dataset.indexNumber;
             book.read = book.read === true ? false : true
             e.target.textContent = book.read === true ? 'Mark Unread' : 'Mark Read'
@@ -116,13 +105,7 @@ class Renderer {
             e.target.parentNode.style.opacity = book.read === false ? '100%' : '60%'
         });
 
-        let bookDelDiv = document.createElement('div')
-        bookDelDiv.classList.add('bookDel')
-        bookDelDiv.classList.add('bookActions')
-        bookDelDiv.textContent = 'Remove'
-        bookDiv.appendChild(bookDelDiv)
-
-        bookDelDiv.addEventListener('click', (e) => {
+        delDiv.addEventListener('click', (e) => {
             //Removes without confirmation, add in later
             this.library.removeBookById(id)
             e.target.parentNode.remove()
@@ -130,6 +113,29 @@ class Renderer {
         }, this.library);
         
         this.bookContainer.appendChild(bookDiv)
+    }
+
+    buildDiv(divText, classesToAdd, parentDiv) {
+        
+        //Allow for string of a single css class to be added, convert string to array for processing
+        if (!Array.isArray(classesToAdd)){
+            classesToAdd = classesToAdd.split()
+        }
+
+        let newDiv = document.createElement('div')
+        
+        //Add CSS classes
+        classesToAdd.forEach(cssclass => {
+            newDiv.classList.add(cssclass)
+        })
+
+        newDiv.textContent = divText
+        this.appendDiv(newDiv, parentDiv)
+        return newDiv
+    }
+
+    appendDiv(divName, parentDivName) {
+        parentDivName.appendChild(divName)
     }
 
     toggleForm() {
