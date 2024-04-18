@@ -145,10 +145,17 @@ class Renderer {
   }
 
   processAddBookForm(e) {
+    //Validate form, return on fail
+    let form = document.querySelector("#addBook");
+    console.log(form.checkValidity());
+    if (!form.checkValidity()) return;
+
+    //Query for form components
     let title = document.querySelector("#title").value;
     let author = document.querySelector("#author").value;
     let pages = document.querySelector("#pages").value;
 
+    //Create new book, add to lib, update page
     let newBook = new Book(title, author, pages);
 
     this.library.addBookToLibrary(newBook);

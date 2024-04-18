@@ -276,7 +276,7 @@ input {
   font-size: larger;
 }
 
-input:invalid {
+input:invalid:focus {
   border: 3px solid #ee6352;
 }
 
